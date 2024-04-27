@@ -3,13 +3,14 @@ VELOCIDAD_CAMINATA_PROMEDIO_EN_METROS_POR_MINUTO = 80
 def estimacionTiempoDeViaje()
   destinos = self.tramos.slice(1)
 
-  tiempoDeTramos = destinos.each {
+  tiempoTotal = destinos.each {
     |ubicacion| apiExterna.distanciaEnMetros(
       ubicacion.previous, ubicacion
     ) / VELOCIDAD_CAMINATA_PROMEDIO_EN_METROS_POR_MINUTO
   }.sum()
 
-  tiempoDeParadas = destinos.length() * self.estrategiaDeParada.tiempoDeEspera()
+  if self.tiempoDeEsperaEnParada do
+    tiempoTotal += self.tiempoDeEsperaEnParada * (self.tramos.length - 2)
 
   return tiempoDeTramos + tiempoDeParadas
 end
